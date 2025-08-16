@@ -42,6 +42,7 @@ def filter_corpus(corpus:list[dict], pattern:str) -> list[dict]:
         match_results = [matcher(p) for p in c['paths']]
         if not any(match_results):
             new_corpus.append(c)
+    print("filename:", filename) ###
     os.remove(filename)
     return new_corpus
 
@@ -157,9 +158,10 @@ if __name__ == '__main__':
     logger.info("Retrieving Zotero corpus...")
     corpus = get_zotero_corpus(args.zotero_id, args.zotero_key)
     logger.info(f"Retrieved {len(corpus)} papers from Zotero.")
+    print(f"{args.zotero_ignore}")
     if args.zotero_ignore:
         logger.info(f"Ignoring papers in:\n {args.zotero_ignore}...")
-        corpus = filter_corpus(corpus, args.zotero_ignore)
+        corpus = filter_corpus(corpus, args.zotero_ignore)        
         logger.info(f"Remaining {len(corpus)} papers after filtering.")
     logger.info("Retrieving Arxiv papers...")
     papers = get_arxiv_paper(args.arxiv_query, args.debug)
