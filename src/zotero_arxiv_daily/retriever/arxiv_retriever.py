@@ -11,6 +11,8 @@ from tqdm import tqdm
 import os
 from loguru import logger
 
+BATCH_SIZE = 10 ###
+
 PDF_EXTRACT_TIMEOUT = 180
 @register_retriever("arxiv")
 class ArxivRetriever(BaseRetriever):
@@ -38,8 +40,11 @@ class ArxivRetriever(BaseRetriever):
 
         # Get full information of each paper from arxiv api
         bar = tqdm(total=len(all_paper_ids))
-        for i in range(0,len(all_paper_ids),20):
-            search = arxiv.Search(id_list=all_paper_ids[i:i+20])
+        
+        # for i in range(0,len(all_paper_ids),20):
+        #     search = arxiv.Search(id_list=all_paper_ids[i:i+20])
+        for i in range(0,len(all_paper_ids),BATCH_SIZE): ###
+            search = arxiv.Search(id_list=all_paper_ids[i:i+BATCH_SIZE]) ###
             batch = list(client.results(search))
             bar.update(len(batch))
             raw_papers.extend(batch)
