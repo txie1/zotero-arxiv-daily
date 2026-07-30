@@ -1,5 +1,19 @@
 from .protocol import Paper
 import math
+import re
+
+
+def format_tldr(tldr:str) -> str:
+    """Render a TLDR into HTML, preserving line structure.
+
+    A multi-line TLDR (e.g. Core idea / Motivation / numbered Method steps)
+    would otherwise collapse into one run-on paragraph, since HTML ignores
+    newlines. Also converts the **bold** markdown LLMs tend to emit.
+    """
+    if not tldr:
+        return tldr
+    html = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', tldr.strip())
+    return html.replace('\n', '<br>')
 
 
 framework = """
@@ -74,7 +88,7 @@ def get_block_html(title:str, authors:str, rate:str, tldr:str, pdf_url:str, affi
     </tr>
     <tr>
         <td style="font-size: 14px; color: #333; padding: 8px 0;">
-            <strong>TLDR:</strong> {tldr}
+            <strong>TLDR:</strong><br>{tldr}
         </td>
     </tr>
 
@@ -125,7 +139,7 @@ def render_email(papers:list[Paper]) -> str:
                 affiliations += ', ...'
         else:
             affiliations = 'Unknown Affiliation'
-        parts.append(get_block_html(p.title, authors, rate, p.tldr, p.pdf_url, affiliations))
+        parts.append(get_block_html(p.title, authors, rate, format_tldr(p.tldr), p.pdf_url, affiliations))
 
     content = '<br>' + '</br><br>'.join(parts) + '</br>'
     return framework.replace('__CONTENT__', content)

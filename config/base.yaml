@@ -29,6 +29,9 @@ llm:
     max_tokens: 16384
     model: ???
   language: English # Preferred language for the TL;DR. Example: English
+  max_prompt_tokens: 4000 # Token budget for the TL;DR prompt. Title + abstract + main-content preview are truncated to fit. Example: 8000
+  tldr_system_prompt: null # Override the system message used for the TL;DR. '{lang}' is replaced with the language above. Leave null for the built-in prompt.
+  tldr_instruction: null # Override the instruction that opens the TL;DR user message (the paper fields are appended after it). '{lang}' is replaced with the language above. Leave null for the built-in prompt.
 
 reranker:
   local:
