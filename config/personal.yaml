@@ -1,0 +1,23 @@
+# Personal overrides, kept out of base.yaml/custom.yaml so that pulling from
+# upstream never conflicts with them. Loaded last, so anything set here wins.
+llm:
+  # ~8k of the paper reaches the model instead of ~4k. On a typical arXiv paper
+  # 4000 tokens stops partway through the framework section, before the proposed
+  # method and every experimental result.
+  max_prompt_tokens: 8000
+
+  tldr_system_prompt: >-
+    You are a machine learning researcher who summarizes scientific papers
+    clearly and concisely. Focus on the paper's motivation, core method, and
+    design intuition. Write in {lang} and use only the provided information.
+
+  tldr_instruction: |-
+    Given the following paper, generate a concise summary in {lang}.
+
+    Use this exact format:
+
+    **Idea:** One sentence, no more than 20 words.
+
+    **Motivation:** One sentence, explain the problem and the main limitation of existing methods.
+
+    **Method:** Describe in 3-5 numbered steps from input to output. Use plain language, avoid unnecessary technical jargon, and briefly explain the intuition of each step.
